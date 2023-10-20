@@ -171,10 +171,15 @@ class SVCInference(nn.Module):
             logger.error("Model does not have generator or model attribute")
             exit()
 
-        weight = weight.speaker_encoder.embedding.weight
+        # weight = weight.speaker_encoder.embedding.weight
+        weight = torch.zeros(1, 256).to(self.device)
         mixed_weight = torch.zeros_like(weight[0])[None]
         for s in speaker_mix:
-            mixed_weight += weight[s[0]] * s[1]
+            individual_spk_weight = self.model.generator.speaker_encoder(s[0].to(self.device))
+            if individual_spk_weight.ndim == 3:
+                mixed_weight += individual_spk_weight.squeeze(1) * s[1]
+            else:
+                mixed_weight += individual_spk_weight * s[1]
 
         return mixed_weight.float()
 
@@ -328,7 +333,7 @@ class SVCInference(nn.Module):
             generated_audio[start : start + wav.shape[-1]] = wav[:max_wav_len]
 
         # Loudness normalization (disabled)
-        # generated_audio = loudness_norm.loudness_norm(generated_audio, sr)
+        generated_audio = loudness_norm.loudness_norm(generated_audio, sr)
 
         logger.info("Done")
 

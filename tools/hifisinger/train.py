@@ -13,7 +13,7 @@ torch.set_float32_matmul_precision("medium")
 
 
 if __name__ == "__main__":
-    pl.seed_everything(594461, workers=True)
+    pl.seed_everything(42, workers=True)
 
     parser = ArgumentParser()
     parser.add_argument("--config", type=str, required=True)
@@ -53,13 +53,16 @@ if __name__ == "__main__":
         missing_keys = set(result.missing_keys)
         unexpected_keys = set(result.unexpected_keys)
 
-        missing_keys.remove("generator.speaker_encoder.embedding.weight")
+        missing_keys = [key for key in missing_keys if not key.startswith("generator.speaker_encoder.embedding.weight")]
+        missing_keys = [key for key in missing_keys if not key.startswith("generator.speaker_encoder.lstm")]
+        missing_keys = [key for key in missing_keys if not key.startswith("generator.speaker_encoder.embedding_fc")]
+        missing_keys = [key for key in missing_keys if not key.startswith("generator.speaker_encoder.linear")]
 
         assert len(unexpected_keys) == 0, f"Unexpected keys: {unexpected_keys}"
         assert len(missing_keys) == 0, f"Missing keys: {missing_keys}"
 
     logger = (
-        TensorBoardLogger("logs", name=cfg.model.type)
+        TensorBoardLogger("logs", name=cfg.model.type, version=0)
         if args.tensorboard
         else WandbLogger(
             project=cfg.model.type,

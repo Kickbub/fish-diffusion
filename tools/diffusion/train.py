@@ -76,7 +76,7 @@ if __name__ == "__main__":
             )
 
     logger = (
-        TensorBoardLogger("logs", name=cfg.model.type)
+        TensorBoardLogger("logs", name=cfg.model.type, version=0)
         if args.tensorboard
         else WandbLogger(
             project=cfg.model.type,

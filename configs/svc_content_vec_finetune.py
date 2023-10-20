@@ -11,7 +11,12 @@ _base_ = [
 ]
 
 speaker_mapping = {
-    "Placeholder": 0,
+    "neuro": 0,
+    "tsukuyomi": 1,
+    "basic": 2,
+    "m4sop": 3,
+    "m4alt": 4,
+    "man": 5,
 }
 
 dataset = dict(
@@ -21,8 +26,33 @@ dataset = dict(
         datasets=[
             dict(
                 type="NaiveSVCDataset",
-                path="dataset/train",
-                speaker_id=speaker_mapping["Placeholder"],
+                path="dataset/neuro/train",
+                speaker_id=speaker_mapping["neuro"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/tsukuyomi/train",
+                speaker_id=speaker_mapping["tsukuyomi"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/basic/train",
+                speaker_id=speaker_mapping["basic"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/m4sop/train",
+                speaker_id=speaker_mapping["m4sop"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/m4alt/train",
+                speaker_id=speaker_mapping["m4alt"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/man/train",
+                speaker_id=speaker_mapping["man"],
             ),
         ],
         # Are there any other ways to do this?
@@ -34,8 +64,33 @@ dataset = dict(
         datasets=[
             dict(
                 type="NaiveSVCDataset",
-                path="dataset/valid",
-                speaker_id=speaker_mapping["Placeholder"],
+                path="dataset/neuro/valid",
+                speaker_id=speaker_mapping["neuro"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/tsukuyomi/valid",
+                speaker_id=speaker_mapping["tsukuyomi"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/basic/valid",
+                speaker_id=speaker_mapping["basic"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/m4sop/valid",
+                speaker_id=speaker_mapping["m4sop"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/m4alt/valid",
+                speaker_id=speaker_mapping["m4alt"],
+            ),
+            dict(
+                type="NaiveSVCDataset",
+                path="dataset/man/valid",
+                speaker_id=speaker_mapping["man"],
             ),
         ],
         collate_fn=NaiveSVCDataset.collate_fn,
@@ -67,7 +122,7 @@ preprocessing = dict(
         type="ContentVec",
     ),
     pitch_extractor=dict(
-        type="CrepePitchExtractor",
+        type="ParselMouthPitchExtractor",
         keep_zeros=False,
         f0_min=40.0,
         f0_max=2000.0,
@@ -77,9 +132,9 @@ preprocessing = dict(
     ),
     augmentations=[
         dict(
-            type="RandomPitchShifting",
+            type="FixedPitchShifting",
             key_shifts=[-5.0, 5.0],
-            probability=1.5,
+            probability=0.75,
         ),
     ],
 )

@@ -14,6 +14,7 @@ from fish_diffusion.modules.pitch_extractors import (
     DioPitchExtractor,
     HarvestPitchExtractor,
     ParselMouthPitchExtractor,
+    PyinPitchExtractor,
 )
 from fish_diffusion.utils.audio import get_mel_from_audio
 
@@ -60,7 +61,7 @@ def extract(path):
     extractors = {
         "Crepe": CrepePitchExtractor,
         "ParselMouth": ParselMouthPitchExtractor,
-        "Dio": DioPitchExtractor,
+        "Pyin": PyinPitchExtractor,
     }
 
     pitches = {}

@@ -27,6 +27,7 @@ from loguru import logger
     help="Remove optimizer states",
     default=False,
 )
+@click.option("--remove-energy-encoder", is_flag=True, help="Remove energy encoder weights", default=False)
 @click.option(
     "--remove-discriminator", is_flag=True, help="Remove discriminator", default=False
 )
@@ -39,6 +40,7 @@ def main(
     remove_speaker_embeddings: bool,
     remove_speaker_by_id: tuple[int],
     remove_optimizer_states: bool,
+    remove_energy_encoder: bool,
     remove_discriminator: bool,
     remove_generator: bool,
 ):
@@ -58,11 +60,15 @@ def main(
 
     if len(remove_speaker_by_id) != 0:
         for id in remove_speaker_by_id:
-            data["generator.speaker_encoder.embedding.weight"][id] = 0.0
+            data["state_dict"]["generator.speaker_encoder.embedding.weight"][id] = 0.0
             logger.info(f"Removed speaker with id {id}")
             logger.info(
-                f"Speaker embedding: {data['generator.speaker_encoder.embedding.weight'][id, :8]}..."
-            )
+                f"Speaker embedding: {data['state_dict']['generator.speaker_encoder.embedding.weight'][id, :8]} ...")
+
+    if remove_energy_encoder:
+        del data["state_dict"]["generator.energy_encoder.projection.weight"]
+        del data["state_dict"]["generator.energy_encoder.projection.bias"]
+        logger.info("Removed energy encoder weights")
 
     if remove_discriminator:
         data = {
