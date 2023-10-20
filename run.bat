@@ -1,0 +1,2 @@
+python tools/preprocessing/extract_features.py --config configs/svc_diffusion_v8.4d.py --path dataset --clean
+python tools/diffusion/colab_train.py --config configs/svc_diffusion_v8.4d.py --pretrained checkpoints/content-vec-pretrained-v1.ckpt --tensorboard

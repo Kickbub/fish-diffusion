@@ -1,0 +1,1 @@
+python tools/diffusion/inference.py --config configs/svc_content_vec.py --checkpoint checkpoints/Neuro_epoch=1036-step=200000-valid_loss=0.13.ckpt --gradio
